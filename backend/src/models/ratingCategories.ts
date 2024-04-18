@@ -1,0 +1,1 @@
+export const ratingCategories = ["1-3.99 ", "4-5.99", "6-7.99", "8-10"];
