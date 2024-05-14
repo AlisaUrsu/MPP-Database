@@ -3,14 +3,18 @@ import { GameRepository } from "../repository/games.repository";
 import { GameMediaRepository } from "../repository/gamesMedia.repository";
 import {Game} from "../models/game";
 import { GameMedia } from "../models/gameMedia";
+import { UserRepository } from "../repository/user.repository";
+import { User } from "../models/user";
 
 export class GameService{
     private repository: GameRepository;
     private mediaRepository: GameMediaRepository;
+    private userRepository: UserRepository;
 
-    constructor(gameRepository: GameRepository, mediaRepository: GameMediaRepository) {
+    constructor(gameRepository: GameRepository, mediaRepository: GameMediaRepository, userRepository: UserRepository) {
         this.repository = gameRepository;
         this.mediaRepository = mediaRepository;
+        this.userRepository = userRepository;
     }
 
     public async getAllGames() {
@@ -186,4 +190,28 @@ export class GameService{
     async getMediaByGameId(gameId: number): Promise<GameMedia[]> {
         return await this.mediaRepository.getGameMediaByGameId(gameId);
     }
+
+
+    public async getAllUsers() {
+        return await this.userRepository.getAllUsers();
+    }
+
+    public async addUser(username: string, password: string, type: string): Promise<User> {
+        const newUser = new User(username, password, type);
+        return await this.userRepository.addUser(newUser);
+    }
+
+    public async getUserByUsername(username: string): Promise<User | null> {
+        return await this.userRepository.getUserByUsername(username);
+    }
+
+    public async deleteUser(username: string): Promise<void> {
+        await this.userRepository.deleteUser(username);
+    }
+
+    public async updateUser(newUsername: string, newPassword: string, newType: string): Promise<User> {
+        const modifiedUser = new User(newUsername, newPassword, newType);
+        return await this.userRepository.updateUser(modifiedUser);
+    }
+    
 }

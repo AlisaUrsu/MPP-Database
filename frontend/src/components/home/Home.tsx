@@ -13,7 +13,7 @@ import GenreBarChart from "../barchart/GenreBarChart";
 import {GenreLineChart} from "../linechart/GenreLineChart";
 
 
-const Home = () => {
+const Home: React.FC = () =>{
     const [gameList, setGameList] = useState([] as IGame[]);
     const [shownPage, setShownPage] = useState(PageEnum.list);
     const [gameToEdit, setGameToEdit] = useState({} as IGame);
@@ -27,6 +27,14 @@ const Home = () => {
     const [ratingCategories, setRatingCategories] = useState<string[]>([]);
     const [selectedRatingCategory, setSelectedRatingCategory] = useState("");
     const [filteredGameList, setFilteredGameList] = useState([] as IGame[]);
+    const [userRole, setUserRole] = useState<string>("admin");
+    const handleLogin = (role: string) => {
+        setUserRole(role);
+      };
+    
+      const handleLogout = () => {
+        setUserRole('');
+      };
 
     /*useEffect(() => {
         async function loadGames() {
@@ -323,12 +331,9 @@ const Home = () => {
                                 <option value={20}>20 per page</option>
                                 <option value={gameList.length}>All</option>
                             </select>
-                            <button
-                                className="add-button"
-                                onClick={onAddGame}
-                            >
-                                Add Game
-                            </button>
+                            {userRole === 'admin' && (
+              <button className="add-button" onClick={onAddGame}>Add Game</button>
+            )}
                         </div>
                         <section className="filter"></section>
                         <section className="content">
@@ -363,6 +368,7 @@ const Home = () => {
                             >
                                 Next
                             </button>
+                            <button onClick={handleLogout}>Logout</button>
                         </div>
                            
                     </>

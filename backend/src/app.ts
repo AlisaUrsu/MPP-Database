@@ -4,13 +4,32 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import GameModel from "./models/game.model"
 import gamesRouter from "./routes/games.routes"
+import usersRouter from "./routes/users.routes";
+import session, { Cookie } from "express-session";
+import MongoStore from "connect-mongo";
+import env from "./util/validateEnv";
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
+
+app.use(session({
+    secret: env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 60 * 60 * 24,
+    },
+    rolling: true,
+    store: MongoStore.create({
+        mongoUrl: env.MONGO_CONNECTION_STRING,
+    })
+}))
+
 app.use("/games", gamesRouter);
+app.use("/users", usersRouter);
 
 app.use((req, res, next) => {
     next(Error("Endpoint not found"));

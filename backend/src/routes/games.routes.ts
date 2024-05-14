@@ -4,10 +4,12 @@ import { Controller } from "../controllers/games.controllers";
 import { GameRepository } from "../repository/games.repository";
 import { GameService } from "../services/games.service";
 import { GameMediaRepository } from "../repository/gamesMedia.repository";
+import { UserRepository } from "../repository/user.repository";
 
 const repo = new GameRepository();
 const mediaRepo = new GameMediaRepository();
-const service = new GameService(repo, mediaRepo);
+const userRepo = new UserRepository();
+const service = new GameService(repo, mediaRepo, userRepo);
 service.sortIncreaseGamesByID();
 const controller = new Controller(service);
 const router = express.Router();
@@ -29,5 +31,6 @@ router.get("/media", controller.getAllMedia);
 router.delete("/media/delete/:id", controller.deleteMedia);
 router.post("/media/add", controller.addMedia);
 router.put("/media/update/:id", controller.updateMedia);
-router.get("/media/:gameId",controller.filterMediaByGame);
-export default router;  
+router.get("/media/:gameId", controller.filterMediaByGame);
+
+export default router;
